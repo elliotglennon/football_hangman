@@ -86,7 +86,7 @@ async function startGame() {
     clearHints();
     renderKeyboard(handleGuess);
     setupLifelines(difficulty);
-    renderPlayerIntro(player);
+    renderPlayerIntro();
 
     // Fetch Wikipedia photo asynchronously — don't block game start
     fetchWikipediaImage(player.name).then(url => setPlayerPhoto(url));

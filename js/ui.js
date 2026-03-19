@@ -8,9 +8,18 @@ export function setScreen(name) {
   window.scrollTo(0, 0);
 }
 
+// Default leagues — used when config.js is absent (e.g. GitHub Pages)
+const DEFAULT_LEAGUES = [
+  { name: 'Premier League', code: 'PL',  flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+  { name: 'La Liga',        code: 'PD',  flag: '🇪🇸' },
+  { name: 'Bundesliga',     code: 'BL1', flag: '🇩🇪' },
+  { name: 'Serie A',        code: 'SA',  flag: '🇮🇹' },
+  { name: 'Ligue 1',        code: 'FL1', flag: '🇫🇷' },
+];
+
 // ─── Home screen ────────────────────────────────────────────────────
 export function renderHomeScreen() {
-  const leagues = (typeof CONFIG !== 'undefined') ? CONFIG.LEAGUES : [{ name: 'Premier League', code: 'PL', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' }];
+  const leagues = (typeof CONFIG !== 'undefined') ? CONFIG.LEAGUES : DEFAULT_LEAGUES;
   const activeLeague = (typeof CONFIG !== 'undefined') ? CONFIG.ACTIVE_LEAGUE : 'PL';
   const activeDifficulty = (typeof CONFIG !== 'undefined') ? CONFIG.DIFFICULTY : 'medium';
 
@@ -79,7 +88,7 @@ export function renderHomeScreen() {
 
 // ─── League tab bar on game screen ──────────────────────────────────
 export function renderLeagueTabs() {
-  const leagues = (typeof CONFIG !== 'undefined') ? CONFIG.LEAGUES : [{ name: 'Premier League', code: 'PL', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' }];
+  const leagues = (typeof CONFIG !== 'undefined') ? CONFIG.LEAGUES : DEFAULT_LEAGUES;
   const activeLeague = (typeof CONFIG !== 'undefined') ? CONFIG.ACTIVE_LEAGUE : 'PL';
   const tabBar = document.getElementById('league-tab-bar');
   tabBar.innerHTML = '';
@@ -99,24 +108,14 @@ export function renderLeagueTabs() {
 }
 
 // ─── Player intro panel (photo + starter clues) ──────────────────────
-export function renderPlayerIntro(playerData) {
+export function renderPlayerIntro() {
   const panel = document.getElementById('player-intro');
   if (!panel) return;
-
-  const position = playerData.position || null;
-  const club = playerData.currentTeam || (playerData.clubs?.at(-1)) || null;
-
   panel.innerHTML = `
     <div class="intro-photo-wrap" id="intro-photo-wrap">
       <div class="intro-photo-placeholder" aria-label="Loading player photo">
         <span class="photo-spinner">⚽</span>
       </div>
-    </div>
-    <div class="intro-clues">
-      <p class="intro-clues-label">Who am I?</p>
-      ${position ? `<div class="intro-clue"><span class="intro-clue-icon">📍</span> <span>${position}</span></div>` : ''}
-      ${club ? `<div class="intro-clue"><span class="intro-clue-icon">🏟️</span> <span>Plays for <strong>${club}</strong></span></div>` : ''}
-      <div class="intro-clue intro-clue-muted"><span class="intro-clue-icon">💡</span> <span>Use lifelines for more hints</span></div>
     </div>
   `;
 }
