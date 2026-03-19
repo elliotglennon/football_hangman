@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-screen="home">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Footballer Hangman</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       HOME SCREEN
+  ══════════════════════════════════ -->
+  <div id="screen-home" class="screen">
+    <h1 class="home-title"><span class="title-icon">⚽</span> Footballer Hangman</h1>
+
+    <section aria-label="League selector">
+      <p class="section-label">Select League</p>
+      <div id="league-cards" role="group" aria-label="League options"></div>
+    </section>
+
+    <section aria-label="Difficulty selector">
+      <p class="section-label">Select Difficulty</p>
+      <div id="difficulty-cards" role="group" aria-label="Difficulty options"></div>
+    </section>
+
+    <button id="play-btn" aria-label="Start game — Kick Off">Kick Off →</button>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;width:100%;max-width:400px;">
+      <button id="how-to-play-btn" aria-expanded="false" aria-controls="how-to-play-content">
+        ❓ How to play
+      </button>
+      <div id="how-to-play-content" role="region" aria-label="How to play instructions">
+        <ul>
+          <li>Guess the name of a secret professional footballer, one letter at a time.</li>
+          <li>Spaces, hyphens, and apostrophes are shown automatically.</li>
+          <li>You have <strong>6 lives</strong> — each wrong guess adds a piece to the hangman.</li>
+          <li>Use <strong>lifelines</strong> for hints: nationality, clubs, goals, or a free letter reveal.</li>
+          <li>Guess the full name before the hangman is complete to win!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       LOADING SCREEN
+  ══════════════════════════════════ -->
+  <div id="screen-loading" class="screen" aria-live="polite" aria-label="Loading">
+    <div class="loading-ball" aria-hidden="true">⚽</div>
+    <p class="loading-text">Fetching your footballer…</p>
+  </div>
+
+  <!-- ══════════════════════════════════
+       GAME SCREEN
+  ══════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+
+    <!-- League tab bar -->
+    <nav id="league-tab-bar" aria-label="League tabs" role="tablist"></nav>
+
+    <!-- Main game area -->
+    <div class="game-main">
+
+      <!-- Left column: hangman + lives -->
+      <div class="game-left">
+        <div id="difficulty-badge" aria-label="Current difficulty"></div>
+
+        <!-- Hangman SVG -->
+        <svg id="hangman-svg"
+             viewBox="0 0 280 220"
+             xmlns="http://www.w3.org/2000/svg"
+             aria-label="Hangman diagram"
+             role="img">
+          <!-- Gallows base — always visible -->
+          <line class="gallows-base" x1="20" y1="200" x2="140" y2="200"/>
+          <line class="gallows-base" x1="80" y1="195" x2="80" y2="205"/>
+        </svg>
+
+        <!-- Lives -->
+        <div id="lives-display" aria-label="Remaining lives" aria-live="polite"></div>
+
+        <!-- Hints from lifelines -->
+        <div id="hints-display" aria-live="polite" aria-label="Lifeline hints"></div>
+      </div>
+
+      <!-- Right column: word, lifelines, keyboard -->
+      <div class="game-right">
+
+        <!-- Word display -->
+        <div id="letter-display"
+             aria-label="Letters to guess"
+             aria-live="polite"
+             role="group"></div>
+
+        <!-- Lifelines -->
+        <div id="lifelines" aria-label="Lifelines">
+          <p class="lifeline-label">Lifelines</p>
+          <div class="lifeline-grid">
+            <button class="lifeline-btn"
+                    id="lifeline-freeLetter"
+                    aria-label="Free Letter lifeline — reveal a random consonant"
+                    aria-pressed="false">
+              <span class="lifeline-icon">💌</span> Free Letter
+            </button>
+            <button class="lifeline-btn"
+                    id="lifeline-nationality"
+                    aria-label="Nationality lifeline — reveal player's nationality"
+                    aria-pressed="false">
+              <span class="lifeline-icon">🌍</span> Nationality
+            </button>
+            <button class="lifeline-btn"
+                    id="lifeline-clubs"
+                    aria-label="Clubs lifeline — reveal player's clubs"
+                    aria-pressed="false">
+              <span class="lifeline-icon">🏟️</span> Clubs
+            </button>
+            <button class="lifeline-btn"
+                    id="lifeline-goals"
+                    aria-label="Goals lifeline — reveal career goals"
+                    aria-pressed="false">
+              <span class="lifeline-icon">⚽</span> Goals
+            </button>
+          </div>
+        </div>
+
+        <!-- On-screen keyboard -->
+        <div id="keyboard" role="group" aria-label="Letter keyboard"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       WIN SCREEN
+  ══════════════════════════════════ -->
+  <div id="screen-win" class="screen" aria-live="assertive">
+    <div id="confetti-container" aria-hidden="true"></div>
+    <div class="win-badge" aria-hidden="true">🏆</div>
+    <p class="win-title">You got it!</p>
+    <p id="win-name" aria-label="Player name"></p>
+    <p id="win-flavour" aria-label="Player details"></p>
+    <button class="btn-primary play-again-btn" aria-label="Play again">Play Again</button>
+  </div>
+
+  <!-- ══════════════════════════════════
+       LOSS SCREEN
+  ══════════════════════════════════ -->
+  <div id="screen-loss" class="screen" aria-live="assertive">
+    <div class="loss-badge" aria-hidden="true">😔</div>
+    <p class="loss-title">Hard luck!</p>
+    <p class="loss-answer-label">The answer was:</p>
+    <p id="loss-name" aria-label="Correct player name"></p>
+    <button class="btn-primary play-again-btn" aria-label="Play again">Play Again</button>
+  </div>
+
+  <!-- ══════════════════════════════════
+       ERROR SCREEN
+  ══════════════════════════════════ -->
+  <div id="screen-error" class="screen" aria-live="assertive">
+    <div style="font-size:3rem" aria-hidden="true">🚫</div>
+    <p style="font-family:var(--font-heading);font-size:1.5rem;color:#e53e3e;">Something went wrong</p>
+    <p id="error-message"></p>
+    <button class="btn-primary" id="retry-btn" aria-label="Retry loading a footballer">Try Again</button>
+    <button class="btn-secondary play-again-btn" aria-label="Go back to home screen">Back to Home</button>
+  </div>
+
+  <!-- Config (user-created, gitignored) — load before modules -->
+  <script src="js/config.js" onerror="console.warn('config.js not found — using fallback data only')"></script>
+
+  <!-- Game entry point -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
