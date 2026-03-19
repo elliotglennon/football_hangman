@@ -1,12 +1,13 @@
 // main.js — Game logic and orchestration
 
-import { fetchPlayer } from './api.js';
+import { fetchPlayer, fetchWikipediaImage } from './api.js';
 import { gameState, resetGameState, normaliseChar, addGuessedLetter } from './state.js';
 import {
   setScreen, renderHomeScreen, renderLeagueTabs, renderHangman,
   renderLetterDisplay, renderLives, renderKeyboard, updateKeyboard,
   disableKeyboard, renderDifficultyBadge, resetLifelineButtons,
-  clearHints, showWinScreen, showLossScreen, showErrorScreen
+  clearHints, showWinScreen, showLossScreen, showErrorScreen,
+  renderPlayerIntro, setPlayerPhoto, clearPlayerIntro
 } from './ui.js';
 import { useNationality, useClubs, useGoals, useFreeLetter, setupLifelines } from './lifelines.js';
 
@@ -85,6 +86,10 @@ async function startGame() {
     clearHints();
     renderKeyboard(handleGuess);
     setupLifelines(difficulty);
+    renderPlayerIntro(player);
+
+    // Fetch Wikipedia photo asynchronously — don't block game start
+    fetchWikipediaImage(player.name).then(url => setPlayerPhoto(url));
 
     document.removeEventListener('keydown', handleKeyDown);
     document.addEventListener('keydown', handleKeyDown);
@@ -105,6 +110,7 @@ function handleKeyDown(e) {
 // ─── Navigation ──────────────────────────────────────────────────────
 export function goHome() {
   document.removeEventListener('keydown', handleKeyDown);
+  clearPlayerIntro();
   setScreen('home');
   renderHomeScreen();
 }

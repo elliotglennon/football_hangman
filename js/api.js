@@ -39,6 +39,7 @@ function normalisePlayer(raw) {
     name: raw.name || raw.shortName || '',
     nationality: raw.nationality || '',
     position: raw.position || '',
+    currentTeam: raw.currentTeam?.name || '',
     clubs: raw.currentTeam ? [raw.currentTeam.name] : [],
     goals: null // goals not directly in API; lifeline will show "N/A"
   };
@@ -99,4 +100,22 @@ async function fetchPlayer(leagueCode, difficulty) {
   }
 }
 
-export { fetchPlayer };
+// ─── Wikipedia image fetch ───────────────────────────────────────────
+// Free API, no key required, CORS-friendly with origin=*
+async function fetchWikipediaImage(playerName) {
+  try {
+    const encoded = encodeURIComponent(playerName);
+    const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encoded}&prop=pageimages&format=json&pithumbsize=400&origin=*`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const pages = data?.query?.pages;
+    if (!pages) return null;
+    const page = Object.values(pages)[0];
+    return page?.thumbnail?.source || null;
+  } catch {
+    return null;
+  }
+}
+
+export { fetchPlayer, fetchWikipediaImage };

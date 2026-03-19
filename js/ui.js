@@ -5,6 +5,7 @@ import { gameState } from './state.js';
 // ─── Screen management ──────────────────────────────────────────────
 export function setScreen(name) {
   document.body.setAttribute('data-screen', name);
+  window.scrollTo(0, 0);
 }
 
 // ─── Home screen ────────────────────────────────────────────────────
@@ -95,6 +96,52 @@ export function renderLeagueTabs() {
     });
     tabBar.appendChild(tab);
   }
+}
+
+// ─── Player intro panel (photo + starter clues) ──────────────────────
+export function renderPlayerIntro(playerData) {
+  const panel = document.getElementById('player-intro');
+  if (!panel) return;
+
+  const position = playerData.position || null;
+  const club = playerData.currentTeam || (playerData.clubs?.at(-1)) || null;
+
+  panel.innerHTML = `
+    <div class="intro-photo-wrap" id="intro-photo-wrap">
+      <div class="intro-photo-placeholder" aria-label="Loading player photo">
+        <span class="photo-spinner">⚽</span>
+      </div>
+    </div>
+    <div class="intro-clues">
+      <p class="intro-clues-label">Who am I?</p>
+      ${position ? `<div class="intro-clue"><span class="intro-clue-icon">📍</span> <span>${position}</span></div>` : ''}
+      ${club ? `<div class="intro-clue"><span class="intro-clue-icon">🏟️</span> <span>Plays for <strong>${club}</strong></span></div>` : ''}
+      <div class="intro-clue intro-clue-muted"><span class="intro-clue-icon">💡</span> <span>Use lifelines for more hints</span></div>
+    </div>
+  `;
+}
+
+export function setPlayerPhoto(imageUrl) {
+  const wrap = document.getElementById('intro-photo-wrap');
+  if (!wrap) return;
+  if (imageUrl) {
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = 'Mystery footballer';
+    img.className = 'intro-photo';
+    img.addEventListener('load', () => { wrap.innerHTML = ''; wrap.appendChild(img); });
+    img.addEventListener('error', () => { wrap.innerHTML = '<div class="intro-photo-placeholder">🧍</div>'; });
+    // Start loading (load event fires when done)
+    wrap.appendChild(img);
+    wrap.querySelector('.intro-photo-placeholder')?.remove();
+  } else {
+    wrap.innerHTML = '<div class="intro-photo-placeholder">🧍</div>';
+  }
+}
+
+export function clearPlayerIntro() {
+  const panel = document.getElementById('player-intro');
+  if (panel) panel.innerHTML = '';
 }
 
 // ─── Hangman SVG ────────────────────────────────────────────────────

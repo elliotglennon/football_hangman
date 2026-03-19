@@ -1,12 +1,11 @@
 const CONFIG = {
   FOOTBALL_DATA_API_KEY: 'YOUR_KEY_HERE',
   LEAGUES: [
-    { name: 'Premier League', code: 'PL', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' }
-    // Future leagues added here, e.g.:
-    // { name: 'La Liga', code: 'PD', flag: '🇪🇸' },
-    // { name: 'Bundesliga', code: 'BL1', flag: '🇩🇪' },
-    // { name: 'Serie A', code: 'SA', flag: '🇮🇹' },
-    // { name: 'Ligue 1', code: 'FL1', flag: '🇫🇷' },
+    { name: 'Premier League', code: 'PL',  flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+    { name: 'La Liga',        code: 'PD',  flag: '🇪🇸' },
+    { name: 'Bundesliga',     code: 'BL1', flag: '🇩🇪' },
+    { name: 'Serie A',        code: 'SA',  flag: '🇮🇹' },
+    { name: 'Ligue 1',        code: 'FL1', flag: '🇫🇷' },
   ],
   ACTIVE_LEAGUE: 'PL',
   DIFFICULTY: 'medium',
